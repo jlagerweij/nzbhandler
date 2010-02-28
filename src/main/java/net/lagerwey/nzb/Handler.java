@@ -415,6 +415,7 @@ public class Handler extends JFrame {
                 try {
                     sabnzbd.addFile(uploadFilename, uploadCategory, uploadPostProcessing, uploadScript);
                     pbarUpload.setValue(++progress);
+                    requestStatus();
                     JOptionPane.showMessageDialog(null, "Upload completed.");
                 } catch (AddFileException e) {
                     ExceptionDialog.showExceptionDialog(e);
@@ -422,7 +423,6 @@ public class Handler extends JFrame {
                 pbarUpload.setValue(0);
 
                 dispose();
-                requestStatus();
                 return true;
             }
         };

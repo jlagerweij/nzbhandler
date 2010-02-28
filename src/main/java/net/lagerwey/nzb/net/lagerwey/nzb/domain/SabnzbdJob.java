@@ -13,6 +13,8 @@ public class SabnzbdJob {
     private double mb;
     private double mbleft;
     private String msgid;
+    private String timeleft;
+    
 
     public SabnzbdJob() {
     }
