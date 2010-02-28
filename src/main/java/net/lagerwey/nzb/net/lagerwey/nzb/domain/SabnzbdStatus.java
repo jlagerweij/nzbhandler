@@ -22,7 +22,7 @@ public class SabnzbdStatus {
     private String diskspace2;
     private String kbpersec;
     private List<SabnzbdJob> jobs;
-    private Integer speed;
+    private String speed;
 
     public String getHave_warnings() {
         return have_warnings;
@@ -128,11 +128,11 @@ public class SabnzbdStatus {
         this.jobs = jobs;
     }
 
-    public Integer getSpeed() {
+    public String getSpeed() {
         return speed;
     }
 
-    public void setSpeed(Integer speed) {
+    public void setSpeed(String speed) {
         this.speed = speed;
     }
 
