@@ -100,7 +100,7 @@ public class Handler extends JFrame {
         this.txtUsername = new JTextField();
 
         JLabel lblPassword = new JLabel("Password");
-        this.txtPassword = new JTextField();
+        this.txtPassword = new JPasswordField();
 
         cbxCategories = new JComboBox();
         cbxCategories.setMaximumRowCount(20);
