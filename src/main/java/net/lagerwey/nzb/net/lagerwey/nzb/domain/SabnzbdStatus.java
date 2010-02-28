@@ -14,15 +14,15 @@ public class SabnzbdStatus {
     private String mb;
     private String noofslots;
     private Boolean paused;
+    private Integer pause_int;
+    private String state;
+    private String loadavg;
     private String mbleft;
     private String diskspace1;
     private String diskspace2;
     private String kbpersec;
     private List<SabnzbdJob> jobs;
-
-    public SabnzbdStatus() {
-        System.out.println();
-    }
+    private Integer speed;
 
     public String getHave_warnings() {
         return have_warnings;
@@ -56,12 +56,36 @@ public class SabnzbdStatus {
         this.noofslots = noofslots;
     }
 
-    public Boolean getPaused() {
+    public Boolean isPaused() {
         return paused;
     }
 
     public void setPaused(Boolean paused) {
         this.paused = paused;
+    }
+
+    public Integer getPause_int() {
+        return pause_int;
+    }
+
+    public void setPause_int(Integer pause_int) {
+        this.pause_int = pause_int;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getLoadavg() {
+        return loadavg;
+    }
+
+    public void setLoadavg(String loadavg) {
+        this.loadavg = loadavg;
     }
 
     public String getMbleft() {
@@ -102,6 +126,14 @@ public class SabnzbdStatus {
 
     public void setJobs(List<SabnzbdJob> jobs) {
         this.jobs = jobs;
+    }
+
+    public Integer getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(Integer speed) {
+        this.speed = speed;
     }
 
     public String toString() {

@@ -44,6 +44,7 @@ public class Handler extends JFrame {
 
     private String filename;
     private JProgressBar pbarUpload;
+    private JTable tblQueue;
 
     public Handler(String filename) throws HeadlessException, IOException {
         super();
@@ -126,28 +127,10 @@ public class Handler extends JFrame {
         });
 
         JLabel lblQueue = new JLabel("Queue");
-        final JTable tblQueue = new JTable();
+        tblQueue = new JTable();
         JScrollPane scrlQueue = new JScrollPane(tblQueue);
         scrlQueue.setPreferredSize(new Dimension(500,200));
-        new Thread(new Runnable() {
-            public void run() {
-                SabnzbdStatus status = sabnzbd.queueStatus();
-                if (status != null) {
-                    DefaultTableModel tableModel = new DefaultTableModel(0, 2);
-                    tableModel.setColumnIdentifiers(new String[] {"Name", "MB"});
-                    for (SabnzbdJob job : status.getJobs()) {
-                        DecimalFormat df = new DecimalFormat("#0");
-                        String mbLeft = df.format(job.getMbleft());
-                        String mb = df.format(job.getMb());
-                        if (StringUtils.isNotEmpty(job.getFilename())) {
-                            tableModel.addRow(new Object[]{job.getFilename(), mbLeft + "/" + mb});
-                        }
-                    }
-                    tblQueue.setModel(tableModel);
-                    tblQueue.getColumnModel().getColumn(0).setPreferredWidth(400);
-                }
-            }
-        }).start();
+        requestStatus();
 
         JLabel lblUpload = new JLabel("Upload progress");
         pbarUpload = new JProgressBar(0, 4);
@@ -238,6 +221,28 @@ public class Handler extends JFrame {
         txtApiKey.setVisible(false);
         this.pack();
         this.setVisible(true);
+    }
+
+    private void requestStatus() {
+        new Thread(new Runnable() {
+            public void run() {
+                SabnzbdStatus status = sabnzbd.queueStatus();
+                if (status != null) {
+                    DefaultTableModel tableModel = new DefaultTableModel(0, 2);
+                    tableModel.setColumnIdentifiers(new String[] {"Name", "MB"});
+                    for (SabnzbdJob job : status.getJobs()) {
+                        DecimalFormat df = new DecimalFormat("#0");
+                        String mbLeft = df.format(job.getMbleft());
+                        String mb = df.format(job.getMb());
+                        if (StringUtils.isNotEmpty(job.getFilename())) {
+                            tableModel.addRow(new Object[]{job.getFilename(), mbLeft + "/" + mb});
+                        }
+                    }
+                    tblQueue.setModel(tableModel);
+                    tblQueue.getColumnModel().getColumn(0).setPreferredWidth(400);
+                }
+            }
+        }).start();
     }
 
     private File getBaseDirectory() {
@@ -417,6 +422,7 @@ public class Handler extends JFrame {
                 pbarUpload.setValue(0);
 
                 dispose();
+                requestStatus();
                 return true;
             }
         };

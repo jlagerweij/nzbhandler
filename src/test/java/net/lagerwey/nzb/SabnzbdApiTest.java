@@ -112,7 +112,7 @@ public class SabnzbdApiTest {
         assertEquals("0.0", status.getMbleft());
         assertEquals("0.0", status.getKbpersec());
         assertEquals("0", status.getNoofslots());
-        assertEquals(Boolean.FALSE, status.getPaused());
+        assertEquals(Boolean.FALSE, status.isPaused());
         assertEquals(0, status.getJobs().size());
     }
 
@@ -250,17 +250,17 @@ public class SabnzbdApiTest {
         when(api.executeApiCall(HttpApi.MODE_RESUME)).thenReturn(true);
 
         SabnzbdStatus status = sab.queueStatus();
-        assertFalse(status.getPaused());
+        assertFalse(status.isPaused());
 
         boolean pauseSuccess = sab.pause();
         status = sab.queueStatus();
         assertTrue(pauseSuccess);
-        assertTrue(status.getPaused());
+        assertTrue(status.isPaused());
 
         boolean resumeSuccess = sab.resume();
         status = sab.queueStatus();
         assertTrue(resumeSuccess);
-        assertFalse(status.getPaused());
+        assertFalse(status.isPaused());
     }
 
 }

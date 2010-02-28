@@ -1,6 +1,7 @@
 package net.lagerwey.nzb;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.ConversionException;
 import net.lagerwey.nzb.net.lagerwey.nzb.domain.SabnzbdAlias;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
@@ -18,6 +19,7 @@ import java.util.List;
  * @author Jos Lagerweij
  */
 public class HttpApi {
+
     public static final String APIKEY = "apikey";
     public static final String MA_USERNAME = "ma_username";
     public static final String MA_PASSWORD = "ma_password";
@@ -63,7 +65,6 @@ public class HttpApi {
     public void setDebug(boolean debug) {
         this.debug = debug;
     }
-
 
 
     public void addParam(String name, String value) {
@@ -117,7 +118,9 @@ public class HttpApi {
 
                 returnValue = (List<T>) xstream.fromXML(method.getResponseBodyAsStream());
             } else {
-                JOptionPane.showMessageDialog(null, (new StringBuilder()).append("SABnzbd reported an error, check your configuration! Message from SABnzbd: ").append(method.getResponseBodyAsString()).toString());
+                JOptionPane.showMessageDialog(null, (new StringBuilder()).append(
+                        "SABnzbd reported an error, check your configuration! Message from SABnzbd: ")
+                        .append(method.getResponseBodyAsString()).toString());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -143,9 +146,18 @@ public class HttpApi {
                 for (SabnzbdAlias anAlias : alias) {
                     xstream.alias(anAlias.getName(), anAlias.getClazz());
                 }
-                returnValue = (T) xstream.fromXML(method.getResponseBodyAsStream());
+                try {
+                    returnValue = (T) xstream.fromXML(method.getResponseBodyAsString());
+                } catch (ConversionException e) {
+                    System.err.println(e.getMessage());
+                    System.err.println((new StringBuilder()).append(
+                            "SABnzbd reported an error, check your configuration! Message from SABnzbd: ")
+                            .append(method.getResponseBodyAsString()).toString());
+                }
             } else {
-                JOptionPane.showMessageDialog(null, (new StringBuilder()).append("SABnzbd reported an error, check your configuration! Message from SABnzbd: ").append(method.getResponseBodyAsString()).toString());
+                JOptionPane.showMessageDialog(null, (new StringBuilder()).append(
+                        "SABnzbd reported an error, check your configuration! Message from SABnzbd: ")
+                        .append(method.getResponseBodyAsString()).toString());
             }
         } catch (IOException e) {
             e.printStackTrace();
