@@ -2,9 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <description>NZB Handler</description>
+    <name>NZB Handler</name>
     <groupId>net.lagerwey</groupId>
     <artifactId>nzb-handler</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <packaging>jar</packaging>
     <build>
         <plugins>
@@ -76,9 +78,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>3.1.0</version>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
         </dependency>
         <dependency>
             <groupId>httpunit</groupId>
@@ -98,7 +100,7 @@
         <dependency>
             <groupId>com.simontuffs</groupId>
             <artifactId>one-jar-boot</artifactId>
-            <version>0.96</version>
+            <version>0.97</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
