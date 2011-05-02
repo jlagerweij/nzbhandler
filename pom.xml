@@ -5,7 +5,7 @@
     <name>NZB Handler</name>
     <groupId>net.lagerwey</groupId>
     <artifactId>nzb-handler</artifactId>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.0.5</version>
     <packaging>jar</packaging>
 
     <scm>
