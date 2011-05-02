@@ -9,13 +9,13 @@
     <packaging>jar</packaging>
 
     <scm>
-        <connection>scm:svn:http://nzbhandler.googlecode.com/svn/tags/nzb-handler-1.0.5</connection>
-        <developerConnection>scm:svn:https://nzbhandler.googlecode.com/svn/tags/nzb-handler-1.0.5</developerConnection>
+        <connection>scm:svn:http://nzbhandler.googlecode.com/svn/tags/</connection>
+        <developerConnection>scm:svn:https://nzbhandler.googlecode.com/svn/tags/</developerConnection>
     </scm>
 
     <issueManagement>
         <system>google</system>
-        <url>http://code.google.com/p/krank/issues/list</url>
+        <url>http://code.google.com/p/nzbhandler/issues/list</url>
     </issueManagement>
 
     <build>
