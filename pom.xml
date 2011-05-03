@@ -14,22 +14,6 @@
         <developerConnection>scm:svn:https://nzbhandler.googlecode.com/svn/tags/</developerConnection>
     </scm>
 
-<!--
-    <distributionManagement>
-        <repository>
-            <id>googlecode</id>
-            <name>Maven GoogleCode repo</name>
-            <url>dav:https://nzbhandler.googlecode.com/svn/maven2/</url>
-        </repository>
-        <snapshotRepository>
-            <id>googlecode</id>
-            <name>Maven GoogleCode repo</name>
-            <url>dav:https://nzbhandler.googlecode.com/svn/maven2-snapshots/</url>
-            <uniqueVersion>true</uniqueVersion>
-        </snapshotRepository>
-    </distributionManagement>
-
--->
     <issueManagement>
         <system>google</system>
         <url>http://code.google.com/p/nzbhandler/issues/list</url>
@@ -126,7 +110,6 @@
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>2.5</version>
                 <configuration>
-                    <altDeploymentRepository>skip</altDeploymentRepository>
                     <skip>true</skip>
                 </configuration>
             </plugin>
