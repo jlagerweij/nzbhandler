@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <description>NZB Handler</description>
     <name>NZB Handler</name>
@@ -13,16 +14,80 @@
         <developerConnection>scm:svn:https://nzbhandler.googlecode.com/svn/tags/</developerConnection>
     </scm>
 
+<!--
+    <distributionManagement>
+        <repository>
+            <id>googlecode</id>
+            <name>Maven GoogleCode repo</name>
+            <url>dav:https://nzbhandler.googlecode.com/svn/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>googlecode</id>
+            <name>Maven GoogleCode repo</name>
+            <url>dav:https://nzbhandler.googlecode.com/svn/maven2-snapshots/</url>
+            <uniqueVersion>true</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>
+
+-->
     <issueManagement>
         <system>google</system>
         <url>http://code.google.com/p/nzbhandler/issues/list</url>
     </issueManagement>
 
     <build>
+        <!-- To define the plugin version in your parent POM -->
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.googlecode.maven-gcu-plugin</groupId>
+                    <artifactId>maven-gcu-plugin</artifactId>
+                    <version>1.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <!-- To use the plugin goals in your POM or parent POM -->
         <plugins>
+            <plugin>
+                <groupId>com.googlecode.maven-gcu-plugin</groupId>
+                <artifactId>maven-gcu-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>googlecode</id>
+                        <phase>deploy</phase>
+                        <goals><!--suppress MavenModelInspection -->
+                            <goal>upload</goal>
+                        </goals>
+                        <configuration>
+                            <serverId>googlecode</serverId>
+                            <!-- default: googlecode -->
+                            <failsOnError>true</failsOnError>
+                            <!-- default: false -->
+                            <projectName>nzbhandler</projectName>
+                            <!-- default: ${project.artifactId} -->
+                            <uploads>
+                                <upload>
+                                    <file>
+                                        ${project.build.directory}/${project.artifactId}-${project.version}-one-jar.${project.packaging}
+                                    </file>
+                                    <summary>${project.name} bundle ${project.version}</summary>
+                                    <labels>
+                                        <label>Featured</label>
+                                        <label>Type-Archive</label>
+                                    </labels>
+                                </upload>
+                            </uploads>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
                 <configuration>
                     <source>1.5</source>
                     <target>1.5</target>
@@ -32,6 +97,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
+                <version>2.1</version>
                 <configuration>
                     <tagBase>
                         https://nzbhandler.googlecode.com/svn/tags/
@@ -43,6 +109,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.7</version>
                 <executions>
                     <execution>
                         <id>Javadoc Packaging</id>
@@ -57,10 +124,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.5</version>
                 <configuration>
+                    <altDeploymentRepository>skip</altDeploymentRepository>
                     <skip>true</skip>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -76,6 +146,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2.1</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -102,11 +173,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
+                <version>2.5</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
         </plugins>
+
     </build>
 
     <repositories>
@@ -125,11 +198,6 @@
             <version>3.1</version>
         </dependency>
         <dependency>
-            <groupId>httpunit</groupId>
-            <artifactId>httpunit</artifactId>
-            <version>1.6.2</version>
-        </dependency>
-        <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>1.1.1</version>
@@ -144,21 +212,6 @@
             <artifactId>one-jar-boot</artifactId>
             <version>0.97</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>httpunit</groupId>
-            <artifactId>httpunit</artifactId>
-            <version>1.6.2</version>
-        </dependency>
-        <dependency>
-            <groupId>httpunit</groupId>
-            <artifactId>httpunit</artifactId>
-            <version>1.6.2</version>
-        </dependency>
-        <dependency>
-            <groupId>httpunit</groupId>
-            <artifactId>httpunit</artifactId>
-            <version>1.6.2</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
@@ -182,4 +235,5 @@
         </dependency>
 
     </dependencies>
+
 </project>
