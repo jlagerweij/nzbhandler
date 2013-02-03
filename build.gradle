@@ -64,7 +64,7 @@ uploadArchives {
     ext.versionWithoutSnapshot = version - '-SNAPSHOT'
     ext.archive = file("${jar.destinationDir.path}/${project.archivesBaseName}-${version}-one-jar.jar")
     ext.targetfilename = "${project.archivesBaseName}-${versionWithoutSnapshot}-one-jar.jar"
-    ext.projectname = '${project.archivesBaseName}'
+    ext.projectname = "${project.archivesBaseName}"
     ext.summary = "NZBHandler bundle ${versionWithoutSnapshot}"
     
     doLast {
