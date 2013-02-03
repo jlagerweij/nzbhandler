@@ -1,54 +1,88 @@
 apply plugin: 'java'
-apply plugin: 'maven'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
+apply from: 'http://tellurianring.com/projects/gradle-plugins/gradle-release/apply.groovy'
 
-group = 'net.lagerwey'
-version = '1.0.4'
-
-configurations.compile.transitive = true
-
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+ext.sourceCompatibility = 1.6
+ext.targetCompatibility = 1.6
 
 repositories {
-	mavenRepo urls: [new File(project.projectDir, "lib").toURL()]
-	mavenRepo urls: ["http://repo1.maven.org/maven2"]
+    mavenCentral()
+    mavenRepo url: "lib"
+}
+configurations {
+    provided
+    onejar
+    googlecode
 }
 dependencies {
-	compile "commons-httpclient:commons-httpclient:3.1"
-	compile "httpunit:httpunit:1.6.2"
-	compile "commons-logging:commons-logging:1.1.1"
-	compile "commons-codec:commons-codec:1.3"
-	compile "com.simontuffs:one-jar-boot:0.97"
-	compile "commons-lang:commons-lang:2.4"
-	compile "com.thoughtworks.xstream:xstream:1.3.1"
-	compile "junit:junit:4.0"
-	compile "org.mockito:mockito-all:1.8.0"
-	}
-
-jar {
-	def jars = configurations.compile.collect { it.isDirectory() ? null : it }
-	from (jars) {
-		into('lib')
-	}
+    compile "commons-httpclient:commons-httpclient:3.1"
+    compile "httpunit:httpunit:1.6.2"
+    compile "commons-logging:commons-logging:1.1.1"
+    compile "commons-codec:commons-codec:1.3"
+    compile "com.simontuffs:one-jar-boot:0.97"
+    compile "commons-lang:commons-lang:2.4"
+    compile "com.thoughtworks.xstream:xstream:1.3.1"
+    compile "junit:junit:4.0"
+    compile "org.mockito:mockito-all:1.8.0"
+    onejar 'com.simontuffs:one-jar-ant-task:0.97'
+    googlecode 'ant-googlecode:ant-googlecode:0.0.3'
 }
 
-task replacePoms(dependsOn: install) << {
-    def pomsDir = new File(project.buildDir, "poms")
-    def defaultPomName = "pom-default.xml"
-    def defaultPom = new File(pomsDir, defaultPomName)
-    if (defaultPom.exists()) {
-      File pomFile = new File(project.projectDir, "pom.xml")
-      if (pomFile.exists()) {
-        pomFile.renameTo(new File(project.projectDir, "pom.xml.bak"))
-      }
-      project.copy {
-        from(pomsDir) {
-          include defaultPomName
-          rename defaultPomName, 'pom.xml'
-        }
-        into(project.projectDir)
-      }
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.4'
+}
+
+jar { 
+    manifest { 
+        attributes 'Main-Class': 'net.lagerwey.nzb.Handler'
+    } 
+} 
+
+task oneJar { 
+    ext.destFile = file("${jar.destinationDir.path}/${project.archivesBaseName}-${version}-one-jar.jar")
+    dependsOn jar 
+    inputs.file file("${jar.destinationDir.path}/${project.archivesBaseName}-${version}.jar")
+    outputs.file destFile
+    doLast { 
+        ant.taskdef(name: "onejar", classname: "com.simontuffs.onejar.ant.OneJarTask", classpath: configurations.onejar.asPath, onerror: "report") 
+        ant.onejar(destfile: destFile) { 
+            ant.main(jar: project.tasks.jar.archivePath) 
+            ant.lib() { 
+            configurations.runtime.findAll { !configurations.provided.contains(it) }.each { f -> 
+                ant.fileset(file: f.path) 
+            } 
+            } 
+        } 
+    } 
+} 
+
+createReleaseTag.dependsOn uploadArchives
+
+uploadArchives {
+    dependsOn oneJar
+    ext.versionWithoutSnapshot = version - '-SNAPSHOT'
+    ext.archive = file("${jar.destinationDir.path}/${project.archivesBaseName}-${version}-one-jar.jar")
+    ext.targetfilename = "${project.archivesBaseName}-${versionWithoutSnapshot}-one-jar.jar"
+    ext.projectname = '${project.archivesBaseName}'
+    ext.summary = "NZBHandler bundle ${versionWithoutSnapshot}"
+    
+    doLast {
+        //acquire the user/password (usually supplied via command line)
+        def googleUser = project.getProperty('googleUser')
+        def googlePwd  = project.getProperty('googlePwd')
+
+        assert googleUser && googlePwd : """Google upload not possible - googleUser or googlePwd property not provided.
+        Pass -PgoogleUser=someone -PgooglePwd=secret via command line"""
+
+        println summary
+        assert archive.exists() : "" +
+                "Google upload not possible - no binaries to upload. Please run 'gradlew build' first."
+
+        logger.lifecycle "Uploading $archive ..."
+        ant.taskdef(name:"gcupload", classname:"net.bluecow.googlecode.ant.GoogleCodeUploadTask", classpath: project.configurations.googlecode.asPath)
+        ant.gcupload username:googleUser, password:googlePwd, projectname:projectname,
+                filename:archive, targetfilename:targetfilename, summary:summary,
+                labels:"Featured"
     }
 }
