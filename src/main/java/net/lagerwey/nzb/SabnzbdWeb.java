@@ -131,7 +131,17 @@ public class SabnzbdWeb {
     private void login() {
         try {
             WebRequest baseRequest = new GetMethodWebRequest(this.url);
-            WebResponse response = conversation.getResponse(baseRequest);
+            boolean authorizationRequired = false;
+            WebResponse response = null;
+            try {
+                response = conversation.getResponse(baseRequest);
+            } catch (AuthorizationRequiredException e) {
+                authorizationRequired = true;
+            }
+            if (authorizationRequired) {
+                conversation.setAuthorization(username, password);
+                response = conversation.getResponse(baseRequest);
+            }
             if (response.getForms().length > 0 &&
                     response.getForms()[0].getParameterValue("ma_username") != null) {
                 // We need to login to the system.

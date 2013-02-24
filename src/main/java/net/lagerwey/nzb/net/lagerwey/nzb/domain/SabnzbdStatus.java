@@ -10,6 +10,7 @@ import java.util.List;
  */
 public class SabnzbdStatus {
     private String have_warnings;
+    private String pp_active;
     private String timeleft;
     private String mb;
     private String noofslots;
@@ -30,6 +31,14 @@ public class SabnzbdStatus {
 
     public void setHave_warnings(String have_warnings) {
         this.have_warnings = have_warnings;
+    }
+
+    public String getPp_active() {
+        return pp_active;
+    }
+
+    public void setPp_active(String pp_active) {
+        this.pp_active = pp_active;
     }
 
     public String getTimeleft() {
