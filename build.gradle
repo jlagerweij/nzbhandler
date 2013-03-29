@@ -30,7 +30,7 @@ dependencies {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.4'
+    gradleVersion = '1.5'
 }
 
 jar { 
@@ -61,7 +61,7 @@ createReleaseTag.dependsOn uploadArchives
 
 uploadArchives {
     dependsOn oneJar
-    ext.versionWithoutSnapshot = version - '-SNAPSHOT'
+    ext.versionWithoutSnapshot = project.version - '-SNAPSHOT'
     ext.archive = file("${jar.destinationDir.path}/${project.archivesBaseName}-${version}-one-jar.jar")
     ext.targetfilename = "${project.archivesBaseName}-${versionWithoutSnapshot}-one-jar.jar"
     ext.projectname = "${project.archivesBaseName}"
